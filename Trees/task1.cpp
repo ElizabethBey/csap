@@ -87,3 +87,86 @@ tree *Max(tree *tr)
     else
         return Max(tr->right); //идем по правой ветке до конца
 }
+
+tree *Next(tree *tr, int x)
+{
+    tree *n = find(tr, x);
+    if (n->right)
+        return Min(n->right);
+    tree *y = n->parent;
+    while (y && n == y->right)
+    {
+        n = y;
+        y = y->parent;
+    }
+    return y;
+}
+
+void Delete(tree *&tr, tree *v)
+{ //удаление узла
+    tree *p = v->parent;
+    if (!p)
+        tr = NULL;
+    else if (!v->left && !v->right)
+    {
+        if (p->left == v)
+            p->left = NULL;
+        if (p->right == v)
+            p->right = NULL;
+        delete v;
+    }
+    else if (!v->left || !v->right)
+    {
+        if (!p)
+        {
+            if (!v->left)
+            {
+                tr = v->right;
+                v->parent = NULL;
+            }
+            else
+            {
+                tr = v->left;
+                v->parent = NULL;
+            }
+        }
+        else
+        {
+            if (!v->left)
+            {
+                if (p->left == v)
+                    p->left = v->right;
+                else
+                    p->right = v->right;
+                v->right->parent = p;
+            }
+            else
+            {
+                if (p->left == v)
+                    p->left = v->left;
+                else
+                    p->right = v->left;
+                v->left->parent = p;
+            }
+            delete v;
+        }
+    }
+    else
+    {
+        tree *succ = Next(tr, v->inf);
+        v->inf = succ->inf;
+        if (succ->parent->left == succ)
+        {
+            succ->parent->left = succ->right;
+            if (succ->right)
+                succ->right->parent = succ->parent;
+        }
+        else
+        {
+            succ->parent->right = succ->right;
+            if (succ->right)
+                succ->right->parent = succ->parent;
+        }
+        delete succ;
+    }
+}
