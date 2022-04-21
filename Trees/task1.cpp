@@ -51,3 +51,13 @@ void insert(tree *&tr, int x)
         }
     }
 }
+
+void inorder(tree *tr)
+{ //симметричный обход
+    if (tr)
+    {
+        inorder(tr->left);
+        cout << tr->inf << " ";
+        inorder(tr->right);
+    }
+}
