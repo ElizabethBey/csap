@@ -61,3 +61,29 @@ void inorder(tree *tr)
         inorder(tr->right);
     }
 }
+
+tree *find(tree *tr, int x)
+{                            //поиск
+    if (!tr || x == tr->inf) //нашли или дошли до конца ветки
+        return tr;
+    if (x < tr->inf)
+        return find(tr->left, x); //ищем по левой ветке
+    else
+        return find(tr->right, x); //ищем по правой ветке
+}
+
+tree *Min(tree *tr)
+{ //поиск min
+    if (!tr->left)
+        return tr; //нет левого ребенка
+    else
+        return Min(tr->left); //идем по левой ветке до конца
+}
+
+tree *Max(tree *tr)
+{ //поиск max
+    if (!tr->right)
+        return tr; //нет правого ребенка
+    else
+        return Max(tr->right); //идем по правой ветке до конца
+}
