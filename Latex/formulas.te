@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage[T2A]{fontenc}
+\usepackage[cp1251]{inputenc}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage[12pt]{extsizes}
+\usepackage{fancyvrb}
+\usepackage{indentfirst}
+\usepackage[ left=2cm, right=2cm, top=2cm, bottom=2cm, headsep=0.2cm,
+  footskip=0.6cm, bindingoffset=0cm ]{geometry}
+\usepackage[english,russian]{babel}
+
+
+\begin{document}
+\section*{Вариант 26}
+Уравнение математической модели:
+\begin{equation}
+  q_{0} (q_{0}^{0} + q_{\text{т}}^{0} + Kp_{x}^{0}) + q(q_{0}^{\text{т}} + q_{\text{т}}^{\text{т}} + Kp_{x}^{\text{т}}) + p_{0} (q_{0}^{\text{тр}} + q_{\text{т}}^{\text{тр}} + Kp_{x}^{\text{тр}}) = 1.
+  \label{eq:first}
+\end{equation}
+
+По аналогии с предыдущим вариантом модели условные вероятности $q_0((l + 1)/l),
+  q((l + 1)/l), p_x((l + 1)/l)$ правильного приема нулевого, токового, стирания,
+соответственно, для $(l + 1)$"=го символа запишутся в виде:
+
+\begin{equation}
+  \left.
+  \begin{array}{lll}
+    q_0((l + 1)/l)          & = & q_0q_0^0 + qq_0^{\text{т}} + Kp_xq_0^x;                           \\
+    q_{\text{т}}((l + 1)/l) & = & q_0q_{\text{т}}^0 +qq_{\text{т}}^{\text{т}} + Kp_xq_{\text{т}}^x; \\
+    p_0((l + 1)/l)          & = & q_0p_{\text{тр}}^0 +qp_{\text{тр}}^{\text{т}} + Kp_xp_x^x.
+  \end{array}
+  \right\}
+  \label{eq:second}
+\end{equation}
+
+Решая систему уравнений (\ref{eq:second}), можно получить формулы для определения безусловных ве-
+роятностей $q_0, q, q_x.$
+
+\end{document}
