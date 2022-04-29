@@ -1,0 +1,241 @@
+\documentclass{beamer}
+\usetheme[]{Berlin}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.png,.jpg}
+
+% Данные для заголовочного слайда
+\title{AVL-деревья}
+\author{Бей Елизавета}
+\institute{Саратовский национальный исследовательский государственный университет имени Н. Г. Чернышевского}
+\date{}
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Создатели AVL-дерева}
+    AVL"=деревья "--- наверное, самый первый вид сбалансированных двоичных
+    деревьев поиска, придуманных еще в 1962 году советскими учеными
+    Адельсон"=Вельским и Ландисом.
+\end{frame}
+
+\begin{frame}{Определение}
+    Рассмотрим модифицированный класс деревьев, обладающих
+    всеми преимуществами бинарных деревьев поиска и никогда не вырождающихся.
+    Они называются сбалансированными или AVL-деревьями. Под сбалансированностью
+    будем понимать то, что для каждого узла дерева высоты обоих его поддеревьев
+    различаются не более чем на 1.
+\end{frame}
+
+\begin{frame}{Пример 1}
+    \begin{figure}
+        \includegraphics[width=0.8\textwidth, height=0.65\textheight]{image12}
+        \caption{1}
+    \end{figure}
+
+\end{frame}
+
+\begin{frame}{Пример 2}
+    \begin{figure}
+        \includegraphics[width=0.8\textwidth, height=0.65\textheight]{image2}
+        \caption{2}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Высота}
+    Максимальная высота AVL"=дерева при заданном числе узлов:
+    \begin{equation}
+        h \leqslant \frac{\log_{2}{(n + a)}}{b} - c \leqslant 1.45\log_{2}{(n + 2)}
+    \end{equation}
+    где: \[a = \frac{1 + \frac{3}{\sqrt{5} }}{2} \approx 1,17082039324994;\]
+    \[ b = \log_{2}{(\frac{1 + \sqrt{5}}{2})} \approx 0,694241913630617;\]
+    \[c = 2 - \frac{\log_{2}{5}}{2b} \approx 0,327724061815446.\]
+\end{frame}
+
+\begin{frame}[fragile]{Структура узлов}
+    Будем представлять узлы AVL"=дерева следующей структурой:
+    \begin{verbatim}
+struct node //структура для представления узлов дерева
+{
+	    int key;
+	    unsigned char height;
+	    node* left;
+	    node* right;
+	    node(int k) { key = k; left = right = 0; height = 1; }
+};
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Вспомогательные функции}
+    \begin{verbatim}
+unsigned char height(node* p)
+{
+        return p ? p->height : 0;
+}
+
+int bfactor(node* p)
+{
+	    return height(p->right) - height(p->left);
+}
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Вспомогательные функции}
+    \begin{verbatim}
+void fixheight(node* p)
+{
+	    unsigned char hl = height(p->left);
+	    unsigned char hr = height(p->right);
+	    p->height = (hl > hr ? hl : hr) + 1;
+}
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Правый поворот}
+    \begin{figure}
+        \includegraphics[width=0.8\textwidth, height=0.55\textheight]{rightrot.png}
+        \caption{правый поворот}
+    \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Балансировка узлов: правый поворот}
+    \begin{verbatim}
+node* rotateright(node* p) // правый поворот вокруг p
+{
+    node* q = p->left;
+    p->left = q->right;
+    q->right = p;
+    fixheight(p);
+    fixheight(q);
+    return q;
+}
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}{Левый поворот}
+    \begin{figure}
+        \includegraphics[width=0.8\textwidth, height=0.55\textheight]{leftrot.png}
+        \caption{левый поворот}
+    \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Балансировка узлов: левый поворот}
+    \begin{verbatim}
+node* rotateleft(node* q) // левый поворот вокруг q
+{
+    node* p = q->right;
+    q->right = p->left;
+    p->left = q;
+    fixheight(q);
+    fixheight(p);
+    return p;
+}
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}{Простой поворот}
+    \begin{figure}
+        \includegraphics[width=0.8\textwidth, height=0.55\textheight]{bigrotate1.png}
+        \caption{простой поворот}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Большой поворот}
+    \begin{figure}
+        \includegraphics[width=\textwidth, height=0.5\textheight]{bigrotate2.png}
+        \caption{большой поворот}
+    \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Балансировка}
+    \begin{small}
+        \begin{verbatim}
+node* balance(node* p){ // балансировка узла p
+    fixheight(p);
+    if(bfactor(p)== 2) {
+        if(bfactor(p->right) < 0)
+            p->right = rotateright(p->right);
+        return rotateleft(p);
+    }
+    if(bfactor(p)== -2) {
+        if( bfactor(p->left) > 0  )
+            p->left = rotateleft(p->left);
+        return rotateright(p);
+    }
+    return p; // балансировка не нужна
+}
+    \end{verbatim}
+    \end{small}
+\end{frame}
+
+\begin{frame}[fragile]{Балансировка}
+    \begin{verbatim}
+node* insert(node* p, int k) 
+{//вставка ключа k в дерево с корнем p
+    if(!p) return new node(k);
+    if(k < p->key)
+        p->left = insert(p->left,k);
+    else
+        p->right = insert(p->right,k);
+    return balance(p);
+}
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}{Удаление}
+    \begin{figure}
+        \includegraphics[width=0.8\textwidth, height=0.5\textheight]{delete.png}
+        \caption{удаление}
+    \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Вспомогательные функции}
+    \begin{verbatim}
+node* findmin(node* p) 
+{//поиск узла с минимальным ключом в дереве p 
+    return p->left ? findmin(p->left) : p;
+}
+
+node* removemin(node* p) 
+{//удаление узла с минимальным ключом из дерева p
+	    if(p->left==0)
+		        return p->right;
+	    p->left = removemin(p->left);
+	    return balance(p);
+}
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Функция удаления}
+    \begin{small}
+        \begin{verbatim}
+node* remove(node* p, int k) {
+    if(!p) return 0;
+    if(k < p->key)
+        p->left = remove(p->left,k);
+    else if(k > p->key)
+        p->right = remove(p->right,k);	
+        else {
+            node* q = p->left;
+            node* r = p->right;
+            delete p;
+            if( !r ) return q;
+            node* min = findmin(r);
+            min->right = removemin(r);
+            min->left = q;
+            return balance(min);
+        }
+    return balance(p);
+}
+    \end{verbatim}
+    \end{small}
+\end{frame}
+
+\begin{frame}
+    \begin{beamercolorbox}[ht=7ex, dp=4ex, center, shadow=false, rounded=true]{title in head/foot}
+        \centerline{\LARGE{Спасибо за внимание!}}
+    \end{beamercolorbox}
+\end{frame}
+\end{document}
