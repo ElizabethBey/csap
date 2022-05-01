@@ -102,6 +102,20 @@ tree *Next(tree *tr, int x)
     return y;
 }
 
+tree *Prev(tree *tr, int x)
+{ //поиск предыдущего
+    tree *n = find(tr, x);
+    if (n->left)             //если есть левый ребенок
+        return Max(n->left); // max по левой ветке
+    tree *y = n->parent;     //родитель
+    while (y && n == y->left)
+    {          //пока не дошли до корня или узел - левый ребенок
+        n = y; //идем вверх по дереву
+        y = y->parent;
+    }
+    return y; //возвращаем родителя
+}
+
 void Delete(tree *&tr, tree *v)
 { //удаление узла
     tree *p = v->parent;
@@ -169,4 +183,36 @@ void Delete(tree *&tr, tree *v)
         }
         delete succ;
     }
+}
+
+int main()
+{
+    int n, x;
+    cout << "n = ";
+    cin >> n;
+    tree *Tree = NULL;
+    for (int i = 0; i < n; i++)
+    {
+        cout << i << " : ";
+        cin >> x;
+        insert(Tree, x);
+    }
+    inorder(Tree);
+    cout << endl;
+    x = Min(Tree)->inf;
+    do
+    {
+        tree *y = Next(Tree, x);
+        if (x % 2 != 0 && find(Tree, x))
+            Delete(Tree, find(Tree, x));
+        if (y)
+            x = y->inf;
+        else
+            break;
+        if (!Next(Tree, x) && x % 2 != 0)
+            Delete(Tree, find(Tree, x));
+    } while (find(Tree, x));
+    inorder(Tree);
+    cout << endl;
+    return 0;
 }
