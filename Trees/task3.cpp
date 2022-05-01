@@ -44,30 +44,6 @@ void preorder(tree *tr)
     }
 }
 
-int lefth(tree *tr)
-{ //длина пути от узла до крайнего левого листа
-    int k = 0;
-    tree *x = tr;
-    while (x)
-    {
-        k++;
-        x = x->left;
-    }
-    return k - 1;
-}
-
-int righth(tree *tr)
-{ //длина пути от узла до крайнего правого листа
-    int k = 0;
-    tree *x = tr;
-    while (x)
-    {
-        k++;
-        x = x->right;
-    }
-    return k - 1;
-}
-
 void print(tree *tr, int k)
 {
     if (!tr)
