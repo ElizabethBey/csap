@@ -72,6 +72,17 @@ tree *find(tree *tr, int x)
         return find(tr->right, x); //ищем по правой ветке
 }
 
+void pathToNode(tree *tr, int x)
+{
+    cout << tr->inf << " ";
+    if (x == tr->inf)
+        return;
+    else if (x < tr->inf)
+        pathToNode(tr->left, x);
+    else
+        pathToNode(tr->right, x);
+}
+
 int main()
 {
     int n, x;
@@ -84,7 +95,13 @@ int main()
         cin >> x;
         insert(Tree, x);
     }
+    cout << "Tree: ";
     inorder(Tree);
+    cout << endl
+         << "Path to node: ";
+    cin >> x;
+    if (find(Tree, x))
+        pathToNode(Tree, x);
     cout << endl;
     return 0;
 }
